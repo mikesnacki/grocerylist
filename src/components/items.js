@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import base from "../firebase"
-
-
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export function Item({ item, inBasket, removeItem }) {
 
@@ -15,7 +14,6 @@ export function Item({ item, inBasket, removeItem }) {
                 onClick={() => inBasket(item.id, item.name, item.inBasketStatus)}
             />
             </li>
-            {console.log(checked)}
             <li className={checked}>{item.name}</li>
             <li>
                 <button
@@ -98,6 +96,8 @@ export default function Items() {
         base.collection("items").doc(index).delete()
 
     }
+
+
 
     return (
         <div className="grocery-list">
