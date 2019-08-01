@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import base from "../firebase"
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-export function Item({ item, inBasket, removeItem }) {
+export function Item({ item, index, inBasket, removeItem }) {
 
     const checked = item.inBasketStatus === true ? "checked" : "not-checked"
 
@@ -14,10 +14,17 @@ export function Item({ item, inBasket, removeItem }) {
                 onClick={() => inBasket(item.id, item.name, item.inBasketStatus)}
             />
             </li>
-            <li className={checked}>{item.name}</li>
+            <li
+                className={checked}
+            >
+                {item.name}
+            </li>
             <li>
                 <button
-                    onClick={() => removeItem(item.id)}
+                    onClick={
+                        () => removeItem(index)
+                    }
+                    index={item.index}
                 >
                     x
                 </button>
@@ -60,15 +67,11 @@ export default function Items() {
 
     useEffect(() => {
         const ref = base
-            .collection("items")
-            .onSnapshot(
-                snapshot => {
-                    const newItems = snapshot.docs.map((doc) => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }))
-                    setItems(newItems)
-                })
+            .ref()
+            .on('value', snapshot => {
+                let itemArray = snapshot.val()
+                setItems(itemArray)
+            })
         return () => {
             base.removeBinding(ref);
         }
@@ -78,13 +81,18 @@ export default function Items() {
         const newItem = { name, inBasketStatus: false }
         const newItems = [...items, newItem]
         setItems(newItems)
-        base.collection("items").doc().set(newItem)
+        base
+            .ref()
+            .set(newItems)
     }
 
     const inBasket = (index, itemName, inBasketStatus) => {
 
-        base.collection("items")
-            .doc(index)
+        const updatedItem = { name: itemName, inBasketStatus: !inBasketStatus }
+
+        base
+            .ref()
+            .child(index)
             .set({
                 name: itemName,
                 inBasketStatus: !inBasketStatus
@@ -92,9 +100,10 @@ export default function Items() {
     }
 
     const removeItem = index => {
-
-        base.collection("items").doc(index).delete()
-
+        base
+            .ref()
+            .child(index)
+            .remove()
     }
 
 
@@ -107,7 +116,7 @@ export default function Items() {
                     <Item
                         item={item}
                         inBasketStatus={item.inBasketStatus}
-                        index={item.id}
+                        index={index}
                         key={index}
                         id={item}
                         removeItem={removeItem}
