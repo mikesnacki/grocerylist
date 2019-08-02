@@ -2,13 +2,13 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 
 const config = {
-    apiKey: "AIzaSyAeuIU8lyIRbd_iAeb3Ge9XASV1kXcIlFY",
-    authDomain: "grocery-list-dc685.firebaseapp.com",
+    apiKey: process.env.apiKey,
+    authDomain: process.env.authDomain,
     databaseURL: "https://grocery-list-dc685.firebaseio.com",
-    projectId: "grocery-list-dc685",
-    storageBucket: "grocery-list-dc685.appspot.com",
-    messagingSenderId: "407470376589",
-    appId: "1:407470376589:web:103b5c2312bb03ed"
+    projectId: process.env.projectId,
+    storageBucket: process.env.storageBucket,
+    messagingSenderId: process.env.messagingSenderId,
+    appId: process.env.appId
 };
 
 firebase.initializeApp(config)
