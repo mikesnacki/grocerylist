@@ -11,6 +11,7 @@
     "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.8.6",
     "react-fontawesome": "^1.6.1",
+    "react-icons": "^3.7.0",
     "react-scripts": "3.0.1"
   },
   "scripts": {

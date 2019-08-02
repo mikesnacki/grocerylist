@@ -1,32 +1,42 @@
 import React, { useState, useEffect } from 'react'
 import base from "../firebase"
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { FaTrash } from 'react-icons/fa'
 
-export function Item({ item, index, inBasket, removeItem }) {
+export function Item({ item, index, inBasket, removeItem, shuffleUp }) {
 
     const checked = item.inBasketStatus === true ? "checked" : "not-checked"
 
     return (
         <ul className="row item item-dark">
-            <li><input
-                type="checkbox"
-                className="checkbox"
-                onClick={() => inBasket(item.id, item.name, item.inBasketStatus)}
-            />
+            <li>
+                <label className="switch">
+                    <input
+                        index={item.index}
+                        type="checkbox"
+                        className="checkbox"
+                        onClick={() => inBasket(index, item.name, item.inBasketStatus)}
+                    />
+                    <span className="slider round"></span>
+                </label>
             </li>
             <li
                 className={checked}
             >
-                {item.name}
+                <button
+                    onClick={() => shuffleUp(index)}
+                    index={item.index}
+                    className="button-clear">
+                    {item.name}
+                </button>
             </li>
             <li>
                 <button
-                    onClick={
-                        () => removeItem(index)
-                    }
+                    onClick={() => removeItem(index)}
                     index={item.index}
+                    className="button-clear trash"
                 >
-                    x
+                    <FaTrash
+                    />
                 </button>
             </li>
         </ul >
@@ -80,10 +90,12 @@ export default function Items() {
     const addItem = name => {
         const newItem = { name, inBasketStatus: false }
         const newItems = [...items, newItem]
-        setItems(newItems)
+
         base
             .ref()
             .set(newItems)
+
+        setItems(newItems)
     }
 
     const inBasket = (index, itemName, inBasketStatus) => {
@@ -93,37 +105,58 @@ export default function Items() {
         base
             .ref()
             .child(index)
-            .set({
-                name: itemName,
-                inBasketStatus: !inBasketStatus
-            })
+            .update(
+                updatedItem
+            )
     }
 
-    const removeItem = index => {
-        base
-            .ref()
-            .child(index)
-            .remove()
+    const removeItem = (index) => {
+
+        if (items.length > 1) {
+            items.splice(index, 1)
+
+            base.ref().set(items)
+        } else {
+            window.alert("You don't want to do that")
+        }
     }
 
+    const shuffleUp = (index) => {
+
+        const newArray = items
+        const moveUp = items[index]
+
+        if (items.length > 1 && index !== 0) {
+            newArray[index] = items[index - 1]
+            newArray[index - 1] = moveUp
+
+            setItems(newArray)
+            base
+                .ref()
+                .set(newArray)
+        }
+    }
 
 
     return (
         <div className="grocery-list">
             <h2 className="align-center">Grocery List</h2>
             {
-                items.map((item, index) => (
-                    <Item
-                        item={item}
-                        inBasketStatus={item.inBasketStatus}
-                        index={index}
-                        key={index}
-                        id={item}
-                        removeItem={removeItem}
-                        inBasket={inBasket}
-                    />
-                )
-                )
+                items.length > 0 || items.length != null ?
+                    items.map((item, index) => (
+                        <Item
+                            item={item}
+                            inBasketStatus={item.inBasketStatus}
+                            index={index}
+                            key={index}
+                            id={item}
+                            removeItem={removeItem}
+                            inBasket={inBasket}
+                            shuffleUp={shuffleUp}
+                        />
+                    )
+                    )
+                    : null
             }
             <CreateItem
                 addItem={addItem}
