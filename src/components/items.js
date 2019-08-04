@@ -13,10 +13,10 @@ export function Item({ item, index, inBasket, removeItem, shuffleUp }) {
                     <input
                         index={item.index}
                         type="checkbox"
-                        className="checkbox"
+                        className={`checkbox-${checked}`}
                         onClick={() => inBasket(index, item.name, item.inBasketStatus)}
                     />
-                    <span className="slider round"></span>
+                    <span className={`slider slide-${checked} round`}></span>
                 </label>
             </li>
             <li
