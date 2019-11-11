@@ -26,6 +26,8 @@ input{
   border: 0px;
   text-align: center;
   height: 30px;
+  width: 180px;
+  font-size: 15px;
 }
 
 .row{
