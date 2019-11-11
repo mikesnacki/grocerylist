@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import base from "../firebase"
-import { FaTrash, FaArrowUp } from 'react-icons/fa'
+import { FaTrash } from 'react-icons/fa'
 
 export function Item({ item, index, inBasket, removeItem, shuffleUp }) {
 
     const checked = item.inBasketStatus === true ? "checked" : "not-checked"
-
-    const handleChange=(e)=>{
-        const updatedItem = { name: e.target.value }
-
-        base
-            .ref()
-            .child(index)
-            .update(
-                updatedItem
-            )
-    }
 
     return (
         <ul className="row item item-dark">
@@ -30,20 +19,14 @@ export function Item({ item, index, inBasket, removeItem, shuffleUp }) {
                     <span className={`slider slide-${checked} round`}></span>
                 </label>
             </li>
-                <li
+            <li
                 className={checked}
-                >
-                <input
-                value={item.name}
-                onChange={handleChange}
-                />
-            </li>
-            <li>
+            >
                 <button
                     onClick={() => shuffleUp(index)}
                     index={item.index}
                     className="button-clear">
-                    <FaArrowUp/>
+                    {item.name}
                 </button>
             </li>
             <li>

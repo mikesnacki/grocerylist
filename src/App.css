@@ -17,9 +17,15 @@ ul, li{
   border-radius: 10px;
 }
 
-.checked button{
+.checked{
   opacity: 0.5;
   text-decoration: line-through;
+}
+
+input{
+  border: 0px;
+  text-align: center;
+  height: 30px;
 }
 
 .row{
