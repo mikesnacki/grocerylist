@@ -31,9 +31,9 @@ export function Item({ item, index, inBasket, removeItem, shuffleUp }) {
                 </label>
             </li>
                 <li
-                className={checked}
                 >
                 <input
+                className={checked}
                 value={item.name}
                 onChange={handleChange}
                 />
